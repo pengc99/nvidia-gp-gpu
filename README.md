@@ -70,6 +70,7 @@ sudo nvidia-xconfig -a --allow-empty-initial-configuration --cool-bits=28 --use-
 ```
 # Setup Overclocking Scripts
 See /scripts/ for the scripts that controls overclocks. Install them to ```/usr/local/src/gp-gpu.sh/```
+You will need to edit the settings in the script for your configuration. The settings are near the bottom
 
 See /systemd/ for the systemd unit files that control overclocks. Install them to ```/etc/systemd/system/```
 
@@ -82,11 +83,18 @@ Enable the overclocking service:
 ```
 sudo systemctl enable gpu-oc
 ```
-
 # Final Reboot
 Reboot to make sure all changes stuck:
 ```
 sudo reboot
+```
+On system boot, the overclocks in ```/usr/local/src/gp-gpu.sh/gpu-oc.sh``` will be applied. You can disable the overclocks by running
+```
+sudo systemctl gp-gpuoc stop
+```
+Or re-enable them
+```
+sudo systemctl gp-gpuoc start
 ```
 # Reference
 Setup dummy displays on all detected GPUs
