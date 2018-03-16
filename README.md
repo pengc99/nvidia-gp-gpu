@@ -85,9 +85,10 @@ sudo systemctl enable gpu-oc
 
 # Final Reboot
 Reboot to make sure all changes stuck:
- sudo reboot
-
-# References
+```
+sudo reboot
+```
+# Reference
 Setup dummy displays on all detected GPUs
 ```
 sudo nvidia-xconfig -a --allow-empty-initial-configuration --cool-bits=28 --use-display-device="DFP-0" --connected-monitor="DFP-0"
@@ -96,58 +97,59 @@ Set persistence mode (clocks stay applied until reboot)
 ```
 sudo nvidia-smi -pm 1
 ```
-Set power mode on GPU:
+Set power mode on GPU0
 ```
 sudo nvidia-settings -a [gpu:0](Install])/GPUPowerMizerMode=1
 ```
-Enable manual fan control on cards
+Enable manual fan control on GPU0
 ```
 sudo nvidia-settings -a [gpu:0]/GPUFanControlState=1
 ```
-Set target fan speed on cards to 75%
+Set target fan speed on GPU0 to 75%
 ```
 sudo nvidia-settings -a [fan:0](gpu:0]/GPUFanControlState=1)/GPUTargetFanSpeed=75
 ```
-Set power level on cards to 110 watts
+Set power level on GPU0 to 110 watts
 ```
 sudo nvidia-smi -i 0 -pl 110
 ```
-Set a +750MHz clock offset on memory bus on cards:
+Set a +750MHz clock offset on memory bus on GPU0:
 ```
 sudo nvidia-settings -a "[gpu:0]/GPUMemoryTransferRateOffset[3]=+1500"
 ```
 
 # Todo
-* Figure out why GPU overclocking service keeps trying to run before X is ready
 * Figure out why xdm hangs on shutdown:
- strace: Process 686 attached
- rt_sigsuspend([](gpu:0]/GPUMemoryTransferRateOffset[3]=+1500"), 8)                    = ? ERESTARTNOHAND (To be restarted if no handler)
- --- SIGTERM {si_signo=SIGTERM, si_code=SI_USER, si_pid=1, si_uid=0} ---
- --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_KILLED, si_pid=704, si_uid=0, si_status=SIGTERM, si_utime=0, si_stime=0} ---
- --- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1, si_uid=0} ---
- rt_sigreturn({mask=[            = 0
- getpid()                                = 686
- stat("/etc/localtime", {st_mode=S_IFREG|0644, st_size=3585, ...}) = 0
- getpid()                                = 686
- write(2, "Fri Feb 23 12:35:18 2018 xdm info (pid 686): ", 45) = 45
- write(2, "Shutting down\n", 14)         = 14
- kill(704, SIGTERM)                      = 0
- kill(704, SIGCONT)                      = 0
- kill(690, SIGTERM)                      = 0
- kill(690, SIGCONT)                      = 0
- rt_sigreturn({mask=[HUP CHLD](TERM]}))})         = -1 EINTR (Interrupted system call)
- rt_sigprocmask(SIG_SETMASK, [NULL, 8) = 0
- wait4(-1, [{WIFSIGNALED(s) && WTERMSIG(s) == SIGTERM}](],), WNOHANG, NULL) = 704
- stat("/etc/X11/xdm/xdm-config", {st_mode=S_IFREG|0644, st_size=1113, ...}) = 0
- stat("/etc/X11/xdm/Xservers", {st_mode=S_IFREG|0644, st_size=1687, ...}) = 0
- stat("/etc/X11/xdm/Xaccess", {st_mode=S_IFREG|0644, st_size=3401, ...}) = 0
- stat("/etc/localtime", {st_mode=S_IFREG|0644, st_size=3585, ...}) = 0
- getpid()                                = 686
- write(2, "Fri Feb 23 12:35:18 2018 xdm info (pid 686): ", 45) = 45
- write(2, "display :0 is being disabled\n", 29) = 29
- kill(690, SIGTERM)                      = 0
- kill(690, SIGCONT)                      = 0
- wait4(-1, 0x7ffc222db8c4, WNOHANG, NULL) = 0
- rt_sigprocmask(SIG_BLOCK, [CHLD](HUP), [8) = 0
- rt_sigsuspend([](],), 8)                    = ?
- +++ killed by SIGKILL +++
+```
+strace: Process 686 attached
+rt_sigsuspend([], 8)                    = ? ERESTARTNOHAND (To be restarted if no handler)
+--- SIGTERM {si_signo=SIGTERM, si_code=SI_USER, si_pid=1, si_uid=0} ---
+--- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_KILLED, si_pid=704, si_uid=0, si_status=SIGTERM, si_utime=0, si_stime=0} ---
+--- SIGCONT {si_signo=SIGCONT, si_code=SI_USER, si_pid=1, si_uid=0} ---
+rt_sigreturn({mask=[TERM]})             = 0
+getpid()                                = 686
+stat("/etc/localtime", {st_mode=S_IFREG|0644, st_size=3585, ...}) = 0
+getpid()                                = 686
+write(2, "Fri Feb 23 12:35:18 2018 xdm info (pid 686): ", 45) = 45
+write(2, "Shutting down\n", 14)         = 14
+kill(704, SIGTERM)                      = 0
+kill(704, SIGCONT)                      = 0
+kill(690, SIGTERM)                      = 0
+kill(690, SIGCONT)                      = 0
+rt_sigreturn({mask=[HUP CHLD]})         = -1 EINTR (Interrupted system call)
+rt_sigprocmask(SIG_SETMASK, [], NULL, 8) = 0
+wait4(-1, [{WIFSIGNALED(s) && WTERMSIG(s) == SIGTERM}], WNOHANG, NULL) = 704
+stat("/etc/X11/xdm/xdm-config", {st_mode=S_IFREG|0644, st_size=1113, ...}) = 0
+stat("/etc/X11/xdm/Xservers", {st_mode=S_IFREG|0644, st_size=1687, ...}) = 0
+stat("/etc/X11/xdm/Xaccess", {st_mode=S_IFREG|0644, st_size=3401, ...}) = 0
+stat("/etc/localtime", {st_mode=S_IFREG|0644, st_size=3585, ...}) = 0
+getpid()                                = 686
+write(2, "Fri Feb 23 12:35:18 2018 xdm info (pid 686): ", 45) = 45
+write(2, "display :0 is being disabled\n", 29) = 29
+kill(690, SIGTERM)                      = 0
+kill(690, SIGCONT)                      = 0
+wait4(-1, 0x7ffc222db8c4, WNOHANG, NULL) = 0
+rt_sigprocmask(SIG_BLOCK, [HUP CHLD], [], 8) = 0
+rt_sigsuspend([], 8)                    = ?
++++ killed by SIGKILL +++
+```
