@@ -6,8 +6,8 @@ After=xdm.service
 [Service]
 Type=oneshot
 Environment="DISPLAY=:0"
-ExecStart=/usr/local/src/gpu-oc.bin/gpu-oc.sh
-ExecStop=/usr/local/src/gpu-oc.bin/gpu-nooc.sh
+ExecStart=/usr/local/src/gpu-oc.sh/gpu-oc.sh
+ExecStop=/usr/local/src/gpu-oc.sh/gpu-nooc.sh
 User=root
 Group=root
 RemainAfterExit=yes
