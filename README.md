@@ -1,53 +1,70 @@
 # AutoMine
-Web based Ethereum miner built on top of Debian
+Web based Ethereum miner built on top of Debian. The web-based part is still in-work, but all the command line stuff works now. This will configure a machine with base Debian 9.4 installed to a mining system with no GUI and with only the minimal software required.
 
 This guide assumes you start with a base minimal Debian 9.4 install with only SSH server.
 
 # Post-Install Configuration
-On first boot, grub may try to boot from from the wrong device and load the nouveau nVidia driver. The nouveau nVidia driver causes the machine to hang on boot and prevents the nVidia driver from being loaded so it needs to be blacklisted. Edit the grub configuration to fix this:
- modprobe.blacklist=nouveau
+On first boot, grub may try to boot from from the wrong device and load the nouveau nVidia driver. 
 
-Once the machine is booted, update grub
- sudo update-grub
- sudo grub-install
-
-Alternatively, you can see if there are any kernel updates and apply them; this will reload and reinstall grub with correct settings:
- sudo apt update
- sudo apt upgrade
+The nouveau nVidia driver causes the machine to hang on boot and prevents the nVidia driver from being loaded so it needs to be blacklisted. Edit the kernel line and append this from the grub boot menu to fix this:
+```
+modprobe.blacklist=nouveau
+```
+Once the machine is booted, update grub to fix the wrong boot device issue.
+```
+sudo update-grub
+sudo grub-install
+```
+Alternatively, you can see if there are any kernel updates and apply them; this will reload and reinstall grub with correct settings and set the correct boot device.
+```
+sudo apt update
+sudo apt upgrade
+```
 
 # Install nVidia Binary Driver and Kernel Module
 Blacklist the nouveau driver:
- sudo vim /etc/modprobe.d/blacklist.conf
-
- blacklist nouveau
+```
+sudo nano /etc/modprobe.d/blacklist.conf
+```
+```
+blacklist nouveau
+```
 
 Install software and libraries required to install the nVidia driver:
- sudo apt install -y sudo build-essential vim libcurl4-openssl-dev inotify-tools dkms xserver-xorg xserver-xorg-core xserver-xorg-input-evdev xserver-xorg-video-dummy x11-xserver-utils xdm libgtk-3-0 linux-headers-$(uname -r) 
-
+```
+sudo apt install -y sudo build-essential vim libcurl4-openssl-dev inotify-tools dkms xserver-xorg xserver-xorg-core xserver-xorg-input-evdev xserver-xorg-video-dummy x11-xserver-utils xdm libgtk-3-0 linux-headers-$(uname -r) 
+```
 Download the nVidia driver:
- wget http://us.download.nvidia.com/XFree86/Linux-x86_64/390.25/NVIDIA-Linux-x86_64-390.25.run
+http://www.nvidia.com/download/driverResults.aspx/131853/en-us
 
 Install the nVidia driver. Accept the license agreement, then select "Yes" when prompted to register the kernel module with DKMS. nVidia will complain about missing 32-bit libraries. Don't install them, just acknowledge them and continue. The package will then build and install the nVidia kernel module, and then prompt to run nvidia-xconfig. Select "Yes" to continue. 
- sudo bash NVIDIA-Linux-x86_64-384.98.run
 
 # Setup Dummy X Server and XDM Session
 Setup shell variables for X:
- sudo vim /etc/X11/xdm/Xsetup
+```
+sudo nano /etc/X11/xdm/Xsetup
+```
 
 Paste the following and save
- export PATH=/bin:/usr/bin:/sbin
- export HOME=/root
- export DISPLAY=:0
- xset -dpms
- xset s off
- xhost +
- chvt 1
+```
+export PATH=/bin:/usr/bin:/sbin
+export HOME=/root
+export DISPLAY=:0
+xset -dpms
+xset s off
+xhost +
+chvt 1
+```
 
 Setup shell variables for the user:
- echo 'export DISPLAY=:0' >> ~/.bashrc
+```
+echo 'export DISPLAY=:0' >> ~/.bashrc
+```
 
 Tell nVidia to setup dummy displays attached to all video cards:
- sudo nvidia-xconfig -a --allow-empty-initial-configuration --cool-bits=28 --use-display-device="DFP-0" --connected-monitor="DFP-0"
+```
+sudo nvidia-xconfig -a --allow-empty-initial-configuration --cool-bits=28 --use-display-device="DFP-0" --connected-monitor="DFP-0"
+```
 
 # Setup Overclocking Scripts For Mining
 Create the script that performs the overclocks on the video cards:
