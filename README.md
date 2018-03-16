@@ -89,24 +89,33 @@ Reboot to make sure all changes stuck:
 
 # References
 Setup dummy displays on all detected GPUs
- sudo nvidia-xconfig -a --allow-empty-initial-configuration --cool-bits=28 --use-display-device="DFP-0" --connected-monitor="DFP-0"
-
+```
+sudo nvidia-xconfig -a --allow-empty-initial-configuration --cool-bits=28 --use-display-device="DFP-0" --connected-monitor="DFP-0"
+```
 Set persistence mode (clocks stay applied until reboot)
- sudo nvidia-smi -pm 1
-
+```
+sudo nvidia-smi -pm 1
+```
 Set power mode on GPU:
- sudo nvidia-settings -a [gpu:0](Install])/GPUPowerMizerMode=1
-
+```
+sudo nvidia-settings -a [gpu:0](Install])/GPUPowerMizerMode=1
+```
 Enable manual fan control on cards
- sudo nvidia-settings -a [
+```
+sudo nvidia-settings -a [gpu:0]/GPUFanControlState=1
+```
 Set target fan speed on cards to 75%
- sudo nvidia-settings -a [fan:0](gpu:0]/GPUFanControlState=1)/GPUTargetFanSpeed=75
-
+```
+sudo nvidia-settings -a [fan:0](gpu:0]/GPUFanControlState=1)/GPUTargetFanSpeed=75
+```
 Set power level on cards to 110 watts
- sudo nvidia-smi -i 0 -pl 110
-
+```
+sudo nvidia-smi -i 0 -pl 110
+```
 Set a +750MHz clock offset on memory bus on cards:
+```
 sudo nvidia-settings -a "[gpu:0]/GPUMemoryTransferRateOffset[3]=+1500"
+```
 
 # Todo
 * Figure out why GPU overclocking service keeps trying to run before X is ready
