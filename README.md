@@ -90,11 +90,11 @@ sudo reboot
 ```
 On system boot, the overclocks in ```/usr/local/src/gp-gpu.sh/gpu-oc.sh``` will be applied. You can disable the overclocks by running
 ```
-sudo systemctl gp-gpuoc stop
+sudo systemctl gpu-oc stop
 ```
 Or re-enable them
 ```
-sudo systemctl gp-gpuoc start
+sudo systemctl gpu-oc start
 ```
 # Reference
 Setup dummy displays on all detected GPUs
