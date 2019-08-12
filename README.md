@@ -10,7 +10,7 @@ This guide assumes you start with a base minimal Debian 9.4 install with only SS
 # Post-Install Configuration
 There's a bug in Debian where on first boot, grub may try to boot from from the wrong device causing grub to bomb out and hang.
 
-Additionally, the default Debian install loads the nouveau nVidia module which has a bug that causes the system to hang at random intervals making the system possible to use. 
+Additionally, the default Debian install loads the nouveau nVidia module which has a bug that causes the system to hang at random intervals making the system impossible to use. 
 
 During the first boot after install, you need to edit the boot config at the grub menu before Debian loads. Edit the boot device to be the correct boot device (usually /dev/sda1) and blacklist the nouveau module by appending the following to the kernel line. 
 ```
