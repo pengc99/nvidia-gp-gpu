@@ -15,7 +15,7 @@ do
         inotifywait -qqt 1 -e create -e moved_to "$(dirname $xSocket)"
 done
 
-#Set variables for X display and number of cards detected int he system
+#Set variables for X display and number of cards detected in the system
 DISPLAY=:0
 numCards="$(expr $(lspci | grep NVIDIA | grep VGA | wc -l) - 1)"
 
