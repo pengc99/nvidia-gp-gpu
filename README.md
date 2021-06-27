@@ -161,6 +161,7 @@ rt_sigprocmask(SIG_BLOCK, [HUP CHLD], [], 8) = 0
 rt_sigsuspend([], 8)                    = ?
 +++ killed by SIGKILL +++
 ```
+
 ***
 
 This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
